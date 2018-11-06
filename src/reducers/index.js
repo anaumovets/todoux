@@ -3,8 +3,8 @@ import {AppModes} from '../actions';
 
 const initial = {
   list: [
-  {id:'1', text:'item1 descr', date:Date.now()},
-  {id:'2', text:'item2 descr', date:Date.now()}
+  {id:'1', text:'item1 descr', date: new Date()},
+  {id:'2', text:'item2 descr', date: new Date()}
   ],
 
   lastid:2,

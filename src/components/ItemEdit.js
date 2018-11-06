@@ -5,10 +5,12 @@ import {toggleSelect} from '../actions'
 import DatePicker from 'react-date-picker'
 
 const ItemEdit = ({item, onSave}) => {
-    item = item || {date: new Date()}
+    item = item || {};
+    item.date = item.date || new Date();
 
     let textinput, dateinput;
-    let yearlyEl, monthlyEl, weeklyEl, daysOfWeekEl, daysPeriodEl, remindTermEl, isRegularEl;
+    let yearlyEl, monthlyEl, weeklyEl, daysOfWeekEl,
+    isDoableEl, daysPeriodEl, remindTermEl, isRegularEl, regularBlockEl;
     let weekdayEls = new Array(7);
 
     const updatePeriod = (el) => {
@@ -18,14 +20,15 @@ const ItemEdit = ({item, onSave}) => {
 
         yearlyEl.checked = item.yearly;
         monthlyEl.checked = item.monthly;
-        weeklyEl.checked = item.weetekly;
+        weeklyEl.checked = item.weekly;
 
         daysOfWeekEl.style.display = item.weekly ? 'block' : 'none';
     }
 
     item.weekdays = item.weekdays || (new Array(7)).fill(false);
     const day = item.date.getDate();
-    const dateFormatted = `${item.date.getFullYear()}-${item.date.getMonth()}-${day < 10 ? ('0'+day) : day}`;
+    const month = item.date.getMonth()+1;
+    const dateFormatted = `${item.date.getFullYear()}-${month < 10 ? ('0'+month) : month}-${day < 10 ? ('0'+day) : day}`;
 
     return (
         <div>
@@ -47,7 +50,7 @@ const ItemEdit = ({item, onSave}) => {
                     onChange={()=>item.date=new Date(dateinput.value)}/>
             </div>
 
-            <fieldset>
+            <div>
                 <input 
                 type="checkbox"
                 checked = {item.yearly}
@@ -68,9 +71,9 @@ const ItemEdit = ({item, onSave}) => {
                 ref={el => weeklyEl = el}
                 onChange={() => {updatePeriod(weeklyEl)}}/>
                 <label>weekly</label>
-            </fieldset>
+            </div>
 
-            <fieldset
+            <div
             ref={el => daysOfWeekEl = el}
             style={{display:item.weekly ? 'block' : 'none'}}
             >
@@ -85,28 +88,40 @@ const ItemEdit = ({item, onSave}) => {
                 <label>{['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][idx]}</label>
                 </span>
                 )}
-            </fieldset>
+            </div>
 
             <div>
                 <div>
-                <input type="checkbox" /><label>doable</label>
                 <input type="checkbox" 
-                    defaultChecked={item.daysPeriod}
-                    ref={el => isRegularEl = el}
-                    onChange={()=>{daysPeriodEl.disabled=!isRegularEl.checked}}
+                defaultChecked={item.doable}
+                ref={el => isDoableEl = el}
+                onChange={()=>{
+                    item.doable = isDoableEl.checked;
+                    regularBlockEl.style.display = item.doable ? 'block' : 'none';
+                }}
                 />
-                <label>every</label>
+                <label>doable</label>
                 
-                <input 
-                    type="number"
-                    defaultValue={item.daysPeriod}
-                    disabled={!item.daysPeriod}
-                    ref={el => daysPeriodEl = el}
-                    onChange={()=>{item.daysPeriod = daysPeriodEl.valueAsNumber}}
-                    min={1}
-                    style={{width:"4em"}}
-                />
-                <label>days</label>
+                {<span 
+                ref={el => regularBlockEl = el}
+                style={{display:item.doable ? 'block' : 'none'}}>
+                    <input type="checkbox" 
+                        defaultChecked={item.daysPeriod}
+                        ref={el => isRegularEl = el}
+                        onChange={()=>{daysPeriodEl.disabled=!isRegularEl.checked}}
+                    />
+                    <label>every</label>
+                    <input 
+                        type="number"
+                        defaultValue={item.daysPeriod}
+                        disabled={!item.daysPeriod}
+                        ref={el => daysPeriodEl = el}
+                        onChange={()=>{item.daysPeriod = daysPeriodEl.valueAsNumber}}
+                        min={1}
+                        style={{width:"4em"}}
+                    />
+                    <label>days</label>
+                </span>}
                 </div>
 
                 <div>

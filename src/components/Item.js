@@ -5,18 +5,32 @@ import {toggleSelect} from '../actions'
 
 const Item = ({item, selected_id, toggleSelect}) => {
     const selected = item.id === selected_id;
-    const bkg = selected ? '#ffff00' : '#ffffff';
+    const bkg = selected ? '#ffffaa' : '#ffffff';
 
     return (
         <div
         style={{
             backgroundColor:bkg,
+            padding:"1em",
             width:"20em",
-            whiteSpace: "pre-wrap"
+            fontFamily:"sans serif"
         }}
         onClick={()=>{toggleSelect(item.id)}}
         >
-            {item.text}
+            <div
+            style={{
+                whiteSpace: "pre-wrap"
+            }}
+            >
+                {item.text}
+            </div>
+            <div
+            style={{
+                float:"right",
+                color: '#666666'
+            }}>
+                <i>{item.date.toDateString()}</i>
+            </div>
         </div>
     )
     
