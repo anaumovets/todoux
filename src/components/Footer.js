@@ -24,7 +24,7 @@ const Footer = ({
       disabled={!selected_id}
       onClick={()=>{removeItem(selected_id)}}>Remove</button>
       <button
-      disabled={!selected_id || !selected_item.doable}
+      disabled={!selected_id || !selected_item || !selected_item.doable}
       onClick={()=>{finishItem(selected_id)}}>Finish</button>
     </div>
     );

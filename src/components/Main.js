@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import Footer from './Footer'
 import Tabs from './Tabs'
-import Today from './Today'
+import ItemList from './ItemList'
 import ItemEdit from './ItemEdit'
 import {
   AppModes,
@@ -12,7 +12,21 @@ import {
   editItem
 } from '../actions'
 
-const Main = ({items, selected_id, mode, createItem, editItem}) => {
+const renderToday = (items) => {
+  return (
+    <div>
+      <Tabs />
+        <ItemList items={items.filter(item => !item.done)}/>
+      <Footer />
+    </div>
+    );
+}
+
+const Main = (props) => {
+  const {selected_id, mode, createItem, editItem} = props;
+  const items = props.items.list;
+
+  console.log('render main')
   if(mode === AppModes.MODE_EDITING) {
     let item = items.find(item => item.id === selected_id);
     return <ItemEdit 
@@ -24,24 +38,17 @@ const Main = ({items, selected_id, mode, createItem, editItem}) => {
     return <ItemEdit 
     onSave={createItem}/>
   
-  const current = (<Today/>);
-     
-  return (
-  <div>
-    <Tabs />
-    {current}
-    <Footer />
-  </div>
-  );
+  return renderToday(items)
 }
 
-const mapStateToProps = state => {
-    return {
-      mode: state.mode, 
-      selected_id: state.select.id,
-      items: state.items.list
-    }
-};
+const mapStateToProps = state => state;
+// {
+//     return {
+//       mode: state.mode, 
+//       selected_id: state.select.id,
+//       items: state.items.list
+//     }
+// };
 
 const mapDispatchToProps = dispatch => ({
   createItem: item => {

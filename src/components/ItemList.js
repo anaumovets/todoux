@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Item from './Item'
 
-const Today = ({items}) => {
+const ItemList = ({items}) => {
   console.log("items:", JSON.stringify(items));
   return (
     <ul>
@@ -17,17 +17,8 @@ const Today = ({items}) => {
   );
 }
 
-Today.propTypes = {
+ItemList.propTypes = {
   items: PropTypes.array.isRequired
 }
 
-const mapStateToProps = state => {return {items: state.items.list}}
-
-const mapDispatchToProps = dispatch => ({
-
-})
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Today)
+export default ItemList

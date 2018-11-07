@@ -17,24 +17,46 @@ const items = (state = initial, action) => {
     case 'CREATE_ITEM':
       if(!action.item)
         return state;
-
       let item = {id: ''+state.nextId(), ...action.item};
       state.list.push(item);
       return {...state};
 
     case 'EDIT_ITEM':
+    {
       if(!action.item)
         return state;
-
       const ind = state.list.findIndex(x => x.id === action.item.id);
       state.list[ind] = action.item;
       return {...state};
+    }
 
-    case 'DELETE_ITEM':
-      return state;
+    case 'REMOVE_ITEM':
+    {
+      if(!action.id)
+        return state;
 
-      case 'FINISH_ITEM':
-      return state;
+      const ind = state.list.findIndex(x => x.id === action.id);
+      if(ind === -1)
+        return state;
+
+        console.log('removing ', ind)
+      state.list.splice(ind, 1);
+      return {...state};
+    }
+
+    case 'FINISH_ITEM':
+    {
+      if(!action.id)
+        return state;
+
+      const ind = state.list.findIndex(x => x.id === action.id);
+      if(ind === -1 || !state.list[ind].doable)
+        return state;
+
+      state.list[ind].done = true;
+      return {...state};
+    }
+
     
     default:
       return state;
