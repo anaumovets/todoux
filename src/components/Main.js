@@ -23,7 +23,6 @@ const renderToday = (items) => {
 }
 
 const renderDay = (date, items) => {
-
   if(!items || !items.length)
     return null;
 
@@ -47,7 +46,7 @@ const renderCalendar = (mindate, maxdate, today, items) => {
     calendar[date2idx(item.date)].items.push(item);
   });
 
-  return calendar.map((day, i) => renderDay(idx2date(i), day.items))
+  return calendar.map((day, i) => renderDay(idx2date(i), day.items));
 }
 
 const MainImpl = (props) => {
@@ -67,6 +66,7 @@ const MainImpl = (props) => {
 
     return (
       <div>
+        <Tabs/>
         {renderCalendar(Date.now() - 30*daylength, 
                         Date.now() + 30*daylength,
                         Date.now(), items) }
@@ -75,7 +75,12 @@ const MainImpl = (props) => {
   }
 
   if(mode === AppModes.MODE_DONE) {
-    return <ItemList items={items.filter(item => item.done)}/>
+    return (
+      <div>
+        <Tabs/>
+        <ItemList items={items.filter(item => item.done)}/>
+      </div>
+    );
   }
   
   return renderToday(items)

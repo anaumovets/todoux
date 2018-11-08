@@ -22,13 +22,13 @@ const Item = ({item, selected_id, toggleSelect}) => {
             >
                 {item.text}
             </div>
-            <div
+            {/* <div
             style={{
                 float:"right",
                 color: '#666666'
             }}>
                 <i>{item.date.toDateString()}</i>
-            </div>
+            </div> */}
         </div>
     )
     
