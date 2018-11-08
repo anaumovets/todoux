@@ -15,7 +15,7 @@ import {
 const renderToday = (items) => {
   return (
     <div>
-      <Tabs />
+      <Tabs mode={AppModes.MODE_TODAY}/>
         <ItemList items={items.filter(item => !item.done)}/>
       <Footer />
     </div>
@@ -66,7 +66,7 @@ const MainImpl = (props) => {
 
     return (
       <div>
-        <Tabs/>
+        <Tabs mode={mode}/>
         {renderCalendar(Date.now() - 30*daylength, 
                         Date.now() + 30*daylength,
                         Date.now(), items) }
@@ -77,7 +77,7 @@ const MainImpl = (props) => {
   if(mode === AppModes.MODE_DONE) {
     return (
       <div>
-        <Tabs/>
+        <Tabs mode={mode}/>
         <ItemList items={items.filter(item => item.done)}/>
       </div>
     );

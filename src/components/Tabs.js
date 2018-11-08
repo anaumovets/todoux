@@ -9,19 +9,22 @@ import {
   changeSelect
 } from '../actions'
 
-const Tabs = ({modeToday, modeCalendar, modeDone}) => (
+const Tabs = ({modeToday, modeCalendar, modeDone, mode}) => (
 <div style={{width:'100%', display: 'flex', flexDirection: 'row'}}>
   <button 
+  disabled={mode === AppModes.MODE_TODAY}
   style={{flex:'1'}}
   onClick={()=>{modeToday();}}>
     Today
   </button>
   <button 
+  disabled={mode === AppModes.MODE_CALENDAR}
   style={{flex:'1'}}
   onClick={()=>{modeCalendar();}}>
     Calendar
   </button>
   <button 
+  disabled={mode === AppModes.MODE_DONE}
   style={{flex:'1'}}
   onClick={()=>{modeDone();}}>
     Done
