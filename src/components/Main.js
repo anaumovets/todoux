@@ -11,6 +11,7 @@ import {
   createItem,
   editItem
 } from '../actions'
+import { CenturyView } from 'react-calendar';
 
 const daylength = 24*3600000;
 
@@ -27,7 +28,9 @@ const renderToday = (date, items) => {
   return (
     <div>
       <Tabs mode={AppModes.MODE_TODAY}/>
-      <b>{(new Date(date)).toDateString()}</b>
+      <div style={{textAlign:"center"}}>
+        <b>{(new Date(date)).toDateString()}</b>
+      </div>
         <ItemList items={items.filter(relevant)}/>
       <Footer />
     </div>
@@ -43,7 +46,9 @@ const renderDay = (date, items) => {
     style={{
         float:"center"
     }}>
-        <b>{(new Date(date)).toDateString()}</b>
+        <div style={{textAlign:"center"}}>
+          <b>{(new Date(date)).toDateString()}</b>
+        </div>
         <ItemList items={items}/>
   </div>
 }
@@ -98,7 +103,8 @@ const MainImpl = (props) => {
 const Main = (props) => {
   return (
   <div style={{
-    width:"50em",
+    align:"center",
+    width:"30em",
     fontFamily:"sans serif"}}>
     <MainImpl {...props}/>
   </div>
