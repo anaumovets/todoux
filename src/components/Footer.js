@@ -38,10 +38,22 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  modeCreate: () => dispatch(actions.modeCreate()),
-  modeEdit: (id) => dispatch(actions.modeEdit(id)),
-  removeItem: (id) => dispatch(actions.removeItem(id)),
-  finishItem: (id) => dispatch(actions.finishItem(id)),
+  modeCreate: () => {
+    dispatch(actions.modeCreate());
+    dispatch(actions.changeSelect());
+  },
+  modeEdit: (id) => {
+    dispatch(actions.modeEdit(id));
+    dispatch(actions.changeSelect());
+  },
+  removeItem: (id) => {
+    dispatch(actions.removeItem(id));
+    dispatch(actions.changeSelect());
+  },
+  finishItem: (id) => {
+    dispatch(actions.finishItem(id));
+    dispatch(actions.changeSelect());
+  }
 })
 
 export default connect(

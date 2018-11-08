@@ -65,7 +65,7 @@ const items = (state = initial, action) => {
 
 const select = (state = {id: null}, action) => {
   switch (action.type) {
-    case 'TOGGLE_SELECT':
+    case 'CHANGE_SELECT':
       if(state.id === action.id)
         state.id = undefined;
       else

@@ -1,9 +1,9 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
-import {toggleSelect} from '../actions'
+import {changeSelect} from '../actions'
 
-const Item = ({item, selected_id, toggleSelect}) => {
+const Item = ({item, selected_id, changeSelect}) => {
     const selected = item.id === selected_id;
     const bkg = selected ? '#ffffaa' : '#ffffff';
 
@@ -13,7 +13,7 @@ const Item = ({item, selected_id, toggleSelect}) => {
             backgroundColor:bkg,
             padding:"1em"
         }}
-        onClick={()=>{toggleSelect(item.id)}}
+        onClick={()=>{changeSelect(item.id)}}
         >
             <div
             style={{
@@ -39,7 +39,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-    toggleSelect: id => dispatch(toggleSelect(id))
+    changeSelect: id => dispatch(changeSelect(id))
 })
 
 export default connect(

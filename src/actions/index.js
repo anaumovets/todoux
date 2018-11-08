@@ -25,8 +25,8 @@ export const saveItem = (item) => ({
   item
 });
 
-export const toggleSelect = (id) => ({
-  type: 'TOGGLE_SELECT',
+export const changeSelect = (id) => ({
+  type: 'CHANGE_SELECT',
   id
 });
 

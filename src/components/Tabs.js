@@ -5,7 +5,8 @@ import {
   AppModes,
   modeToday,
   modeCalendar,
-  modeDone
+  modeDone,
+  changeSelect
 } from '../actions'
 
 const Tabs = ({modeToday, modeCalendar, modeDone}) => (
@@ -34,14 +35,17 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   modeToday: () => {
     dispatch(modeToday());
+    dispatch(changeSelect());
   },
 
   modeCalendar: () => {
     dispatch(modeCalendar());
+    dispatch(changeSelect());
   },
 
   modeDone: () => {
     dispatch(modeDone());
+    dispatch(changeSelect());
   }
 })
 
