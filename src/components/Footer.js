@@ -14,16 +14,16 @@ const Footer = ({
     const selected_item = items.find(i=>i.id === selected_id);
 
     return (
-    <div>
-      <button
+    <div style={{width:'100%', display: 'flex', flexDirection: 'row'}}>
+      <button style={{flex:'1'}}
       onClick={()=>{modeCreate()}}>New</button>
-      <button
+      <button style={{flex:'1'}}
       disabled={!selected_id}
       onClick={()=>{modeEdit(selected_id)}}>Edit</button>
-      <button
+      <button style={{flex:'1'}}
       disabled={!selected_id}
       onClick={()=>{removeItem(selected_id)}}>Remove</button>
-      <button
+      <button style={{flex:'1'}}
       disabled={!selected_id || !selected_item || !selected_item.doable}
       onClick={()=>{finishItem(selected_id)}}>Finish</button>
     </div>

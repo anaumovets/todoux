@@ -33,7 +33,9 @@ export const toggleSelect = (id) => ({
 export const AppModes = {
   MODE_EDITING: 'MODE_EDITING',
   MODE_CREATING: 'MODE_CREATING',
-  MODE_TODAY: 'MODE_TODAY'
+  MODE_TODAY: 'MODE_TODAY',
+  MODE_CALENDAR: 'MODE_CALENDAR',
+  MODE_DONE: 'MODE_DONE'
 }
 
 export const modeEdit = () => ({
@@ -49,4 +51,14 @@ export const modeCreate = () => ({
 export const modeToday = () => ({
   type: 'CHANGE_MODE',
   mode: AppModes.MODE_TODAY
+});
+
+export const modeCalendar = () => ({
+  type: 'CHANGE_MODE',
+  mode: AppModes.MODE_CALENDAR
+});
+
+export const modeDone = () => ({
+  type: 'CHANGE_MODE',
+  mode: AppModes.MODE_DONE
 });

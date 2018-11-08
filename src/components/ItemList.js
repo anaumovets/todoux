@@ -4,16 +4,15 @@ import PropTypes from 'prop-types'
 import Item from './Item'
 
 const ItemList = ({items}) => {
-  console.log("items:", JSON.stringify(items));
   return (
-    <ul>
+    <div>
         {items.map(item =>
         <Item
             key={item.id}
             item={item}
         />
         )}
-    </ul>
+    </div>
   );
 }
 

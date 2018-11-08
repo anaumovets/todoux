@@ -11,9 +11,7 @@ const Item = ({item, selected_id, toggleSelect}) => {
         <div
         style={{
             backgroundColor:bkg,
-            padding:"1em",
-            width:"20em",
-            fontFamily:"sans serif"
+            padding:"1em"
         }}
         onClick={()=>{toggleSelect(item.id)}}
         >
