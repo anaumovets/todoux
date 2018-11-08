@@ -1,10 +1,16 @@
 import {combineReducers} from 'redux';
 import {AppModes} from '../actions';
 
+const daylength = 24*3600000;
+
 const initial = {
   list: [
-  {id:'1', text:'item1 descr', date: new Date()},
-  {id:'2', text:'item2 descr', date: new Date()}
+  {id:'1', text:'item 1 descr', date: Date.now()},
+  {id:'2', text:'item 2 descr doable', doable: true, date: Date.now()},
+  {id:'3', text:'item 3 descr', date: Date.now()+daylength},
+  {id:'4', text:'item 4 descr doable', doable:true, date: Date.now()+3*daylength},
+  {id:'5', text:'item2 descr doable!', doable: true, date: Date.now()+3*daylength, remindTerm: 5},
+  {id:'6', text:'item2 descr', date: Date.now()+8*daylength}
   ],
 
   lastid:2,

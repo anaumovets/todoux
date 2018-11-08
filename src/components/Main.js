@@ -12,11 +12,23 @@ import {
   editItem
 } from '../actions'
 
-const renderToday = (items) => {
+const daylength = 24*3600000;
+
+const renderToday = (date, items) => {
+  const date2day = date => Math.floor(date/daylength);
+  const relevant = item => {
+    if(!item.doable)
+      return date2day(date) === date2day(item.date);
+
+    return !item.done && 
+          (date2day(date) >= date2day(item.date) - (item.remindTerm || 0));
+  };
+
   return (
     <div>
       <Tabs mode={AppModes.MODE_TODAY}/>
-        <ItemList items={items.filter(item => !item.done)}/>
+      <b>{(new Date(date)).toDateString()}</b>
+        <ItemList items={items.filter(relevant)}/>
       <Footer />
     </div>
   );
@@ -27,7 +39,7 @@ const renderDay = (date, items) => {
     return null;
 
   return <div
-    key={'day'+Math.floor(date/24*3600000)}
+    key={'day'+Math.floor(date/daylength)}
     style={{
         float:"center"
     }}>
@@ -37,12 +49,11 @@ const renderDay = (date, items) => {
 }
 
 const renderCalendar = (mindate, maxdate, today, items) => {
-  const daylength = 24*3600000;
   const date2idx = day => Math.floor((day - mindate)/daylength);
   const calendar = (new Array(date2idx(maxdate)+1)).fill().map(x=>({items:[]}));
   const idx2date = idx => mindate + idx*daylength;
 
-  items.forEach(item => {
+  items.filter(item => !item.done).forEach(item => {
     calendar[date2idx(item.date)].items.push(item);
   });
 
@@ -62,8 +73,6 @@ const MainImpl = (props) => {
     return <ItemEdit onSave={createItem}/>
 
   if(mode === AppModes.MODE_CALENDAR) {
-    const daylength = 24*3600000;
-
     return (
       <div>
         <Tabs mode={mode}/>
@@ -83,7 +92,7 @@ const MainImpl = (props) => {
     );
   }
   
-  return renderToday(items)
+  return renderToday(Date.now(), items);
 }
 
 const Main = (props) => {
