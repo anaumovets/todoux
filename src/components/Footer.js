@@ -14,7 +14,8 @@ const Footer = ({
     const selected_item = items.find(i=>i.id === selected_id);
 
     return (
-    <div style={{width:'100%', display: 'flex', flexDirection: 'row'}}>
+    <div style={{width:'30em', display: 'flex', flexDirection: 'row',
+      position:'absolute', bottom:10}}>
       <button style={{flex:'1'}}
       onClick={()=>{modeCreate()}}>New</button>
       <button style={{flex:'1'}}
