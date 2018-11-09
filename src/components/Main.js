@@ -108,7 +108,9 @@ const MainImpl = (props) => {
 const Main = (props) => {
   return (
   <div style={{
-    align:"center",
+
+    marginLeft:"auto",
+    marginRight:"auto",
     width:"30em",
     fontFamily:"sans serif"
    }}>
