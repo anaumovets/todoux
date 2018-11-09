@@ -11,7 +11,6 @@ import {
   createItem,
   editItem
 } from '../actions'
-import { CenturyView } from 'react-calendar';
 
 const daylength = 24*3600000;
 
@@ -28,10 +27,12 @@ const renderToday = (date, items) => {
   return (
     <div>
       <Tabs mode={AppModes.MODE_TODAY}/>
-      <div style={{textAlign:"center"}}>
-        <b>{(new Date(date)).toDateString()}</b>
-      </div>
+      <div style={{height:"85vh", overflowY:"scroll"}}>
+        <div style={{textAlign:"center"}}>
+          <b>{(new Date(date)).toDateString()}</b>
+        </div>
         <ItemList items={items.filter(relevant)}/>
+      </div>
       <Footer />
     </div>
   );
@@ -81,9 +82,11 @@ const MainImpl = (props) => {
     return (
       <div>
         <Tabs mode={mode}/>
+        <div style={{height:"90vh", overflowY:"scroll"}}>
         {renderCalendar(Date.now() - 30*daylength, 
                         Date.now() + 30*daylength,
                         Date.now(), items) }
+        </div>
       </div>
     );
   }
@@ -92,11 +95,13 @@ const MainImpl = (props) => {
     return (
       <div>
         <Tabs mode={mode}/>
-        <ItemList items={items.filter(item => item.done)}/>
+        <div style={{height:"90vh", overflowY:"scroll"}}>
+          <ItemList items={items.filter(item => item.done)}/>
+        </div>
       </div>
     );
   }
-  
+
   return renderToday(Date.now(), items);
 }
 
@@ -105,7 +110,8 @@ const Main = (props) => {
   <div style={{
     align:"center",
     width:"30em",
-    fontFamily:"sans serif"}}>
+    fontFamily:"sans serif"
+   }}>
     <MainImpl {...props}/>
   </div>
   );

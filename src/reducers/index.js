@@ -10,10 +10,11 @@ const initial = {
   {id:'3', text:'item 3 descr', date: Date.now()+daylength},
   {id:'4', text:'item 4 descr doable', doable:true, date: Date.now()+3*daylength},
   {id:'5', text:'item2 descr doable!', doable: true, date: Date.now()+3*daylength, remindTerm: 5},
-  {id:'6', text:'item2 descr', date: Date.now()+8*daylength}
+  {id:'6', text:'item2 descr', date: Date.now()+8*daylength},
+  {id:'7', text:(new Array(50)).fill('long').join('\n'), date:Date.now()}
   ],
 
-  lastid:2,
+  lastid:7,
 
   nextId: function() {return ++this.lastid}
 };
