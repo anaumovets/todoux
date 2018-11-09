@@ -61,6 +61,7 @@ const items = (state = initial, action) => {
         return state;
 
       state.list[ind].done = true;
+      state.list[ind].donedate = Date.now();
       return {...state};
     }
 

@@ -22,13 +22,10 @@ const Item = ({item, selected_id, changeSelect}) => {
             >
                 {item.text}
             </div>
-            {/* <div
-            style={{
-                float:"right",
-                color: '#666666'
-            }}>
-                <i>{item.date.toDateString()}</i>
-            </div> */}
+            {item.done && 
+            <div style={{float:"right", color: '#666666'}}>
+                <i>{`Done ${(new Date(item.donedate)).toDateString()}`}</i>
+            </div> }
         </div>
     )
     
