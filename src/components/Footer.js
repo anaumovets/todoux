@@ -4,28 +4,29 @@ import PropTypes from 'prop-types'
 import * as actions from '../actions'
 
 const Footer = ({
+  isDoneMode,
   selected_id,
   items,
   modeCreate,
   modeEdit,
   removeItem,
-  finishItem
+  finishItem,
+  undoItem
   }) => {
     const selected_item = items.find(i=>i.id === selected_id);
 
+    const buttonHelper = (fn, text, disabled) => (
+      <button style={{flex:'1'}} disabled={disabled} onClick={fn}>{text}</button>
+    );
+
     return (
     <div style={{width:'30em', display: 'flex', flexDirection: 'row'}}>
-      <button style={{flex:'1'}}
-      onClick={()=>{modeCreate()}}>New</button>
-      <button style={{flex:'1'}}
-      disabled={!selected_id}
-      onClick={()=>{modeEdit(selected_id)}}>Edit</button>
-      <button style={{flex:'1'}}
-      disabled={!selected_id}
-      onClick={()=>{removeItem(selected_id)}}>Remove</button>
-      <button style={{flex:'1'}}
-      disabled={!selected_id || !selected_item || !selected_item.doable}
-      onClick={()=>{finishItem(selected_id)}}>Finish</button>
+      {buttonHelper(modeCreate, 'New', false)}
+      {buttonHelper(()=>modeEdit(selected_id), 'Edit', !selected_id)}
+      {buttonHelper(()=>removeItem(selected_id), 'Remove', !selected_id)}
+      {!isDoneMode && buttonHelper(()=>finishItem(selected_id), 'Finish', 
+        !selected_id || !selected_item || !selected_item.doable)}
+      {isDoneMode && buttonHelper(()=>undoItem(selected_id), 'Undo', !selected_id)}
     </div>
     );
   }
@@ -52,6 +53,10 @@ const mapDispatchToProps = dispatch => ({
   },
   finishItem: (id) => {
     dispatch(actions.finishItem(id));
+    dispatch(actions.changeSelect());
+  },
+  undoItem: (id) => {
+    dispatch(actions.undoItem(id));
     dispatch(actions.changeSelect());
   }
 })

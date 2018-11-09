@@ -20,6 +20,11 @@ export const finishItem = (id) => ({
   id
 });
 
+export const undoItem = (id) => ({
+  type: 'UNDO_ITEM',
+  id
+});
+
 export const saveItem = (item) => ({
   type: 'SAVE_ITEM',
   item

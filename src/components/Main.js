@@ -14,6 +14,16 @@ import {
 
 const daylength = 24*3600000;
 
+const wrap = (element, mode) => {
+  return <div>
+    <Tabs mode={mode}/>
+      <div style={{height:"85vh", overflowY:"scroll"}}>
+        {element}
+      </div>
+    <Footer isDoneMode={mode===AppModes.MODE_DONE}/>
+  </div>
+}
+
 const renderToday = (date, items) => {
   const date2day = date => Math.floor(date/daylength);
   const relevant = item => {
@@ -26,14 +36,10 @@ const renderToday = (date, items) => {
 
   return (
     <div>
-      <Tabs mode={AppModes.MODE_TODAY}/>
-      <div style={{height:"85vh", overflowY:"scroll"}}>
-        <div style={{textAlign:"center"}}>
-          <b>{(new Date(date)).toDateString()}</b>
-        </div>
-        <ItemList items={items.filter(relevant)}/>
+      <div style={{textAlign:"center"}}>
+        <b>{(new Date(date)).toDateString()}</b>
       </div>
-      <Footer />
+      <ItemList items={items.filter(relevant)}/>
     </div>
   );
 }
@@ -79,30 +85,19 @@ const MainImpl = (props) => {
     return <ItemEdit onSave={createItem}/>
 
   if(mode === AppModes.MODE_CALENDAR) {
-    return (
-      <div>
-        <Tabs mode={mode}/>
-        <div style={{height:"90vh", overflowY:"scroll"}}>
-        {renderCalendar(Date.now() - 30*daylength, 
-                        Date.now() + 30*daylength,
-                        Date.now(), items) }
-        </div>
-      </div>
+    return wrap(
+      renderCalendar(Date.now() - 30*daylength, 
+                     Date.now() + 30*daylength,
+                     Date.now(), items),
+      mode
     );
   }
 
   if(mode === AppModes.MODE_DONE) {
-    return (
-      <div>
-        <Tabs mode={mode}/>
-        <div style={{height:"90vh", overflowY:"scroll"}}>
-          <ItemList items={items.filter(item => item.done)}/>
-        </div>
-      </div>
-    );
+    return wrap(<ItemList items={items.filter(item => item.done)}/>, mode);
   }
 
-  return renderToday(Date.now(), items);
+  return wrap(renderToday(Date.now(), items), mode);
 }
 
 const Main = (props) => {

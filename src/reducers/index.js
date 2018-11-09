@@ -65,7 +65,20 @@ const items = (state = initial, action) => {
       return {...state};
     }
 
-    
+    case 'UNDO_ITEM':
+    {
+      if(!action.id)
+        return state;
+
+      const ind = state.list.findIndex(x => x.id === action.id);
+      if(ind === -1)
+        return state;
+
+      delete state.list[ind].done;
+      delete state.list[ind].donedate;
+      return {...state};
+    }
+
     default:
       return state;
   }
