@@ -44,19 +44,25 @@ const renderToday = (date, items) => {
   );
 }
 
-const renderDay = (date, items) => {
+const renderDay = (date, items, isToday) => {
   if(!items || !items.length)
     return null;
+
+  const headerStyle = {
+    textAlign:"center",
+    backgroundColor: isToday ? '#ffffaa' : '#ffffff'
+  };
 
   return <div
     key={'day'+Math.floor(date/daylength)}
     style={{
         float:"center"
     }}>
-        <div style={{textAlign:"center"}}>
+        <div style={headerStyle}>
           <b>{(new Date(date)).toDateString()}</b>
         </div>
         <ItemList items={items}/>
+        <br/><br/><br/>
   </div>
 }
 
@@ -69,7 +75,7 @@ const renderCalendar = (mindate, maxdate, today, items) => {
     calendar[date2idx(item.date)].items.push(item);
   });
 
-  return calendar.map((day, i) => renderDay(idx2date(i), day.items));
+  return calendar.map((day, i) => renderDay(idx2date(i), day.items, i === date2idx(today)));
 }
 
 const MainImpl = (props) => {
