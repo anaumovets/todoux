@@ -112,9 +112,14 @@ class Main extends React.Component {
   }
 
   componentDidUpdate() {
+    if(this.scrolled)
+      return;
+
     const element = document.getElementById("id_today");
-    if(element)
+    if(element) {
       element.scrollIntoView({behavior: 'smooth'});
+      this.scrolled = true;
+    }
   }
 
   render() {
