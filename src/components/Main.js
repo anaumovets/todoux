@@ -14,16 +14,6 @@ import {
 
 const daylength = 24*3600000;
 
-const wrap = (element, mode) => {
-  return <div>
-    <Tabs mode={mode}/>
-      <div style={{height:"85vh", overflowY:"scroll"}}>
-        {element}
-      </div>
-    <Footer isDoneMode={mode===AppModes.MODE_DONE}/>
-  </div>
-}
-
 const renderToday = (date, items) => {
   const date2day = date => Math.floor(date/daylength);
   const relevant = item => {
@@ -58,7 +48,7 @@ const renderDay = (date, items, isToday) => {
     style={{
         float:"center"
     }}>
-        <div style={headerStyle}>
+        <div style={headerStyle} id={isToday ? 'id_today' : null}>
           <b>{(new Date(date)).toDateString()}</b>
         </div>
         <ItemList items={items}/>
@@ -106,17 +96,39 @@ const MainImpl = (props) => {
   return wrap(renderToday(Date.now(), items), mode);
 }
 
-const Main = (props) => {
-  return (
-  <div style={{
-    marginLeft:"auto",
-    marginRight:"auto",
-    width:"30em",
-    fontFamily:"sans serif"
-   }}>
-    <MainImpl {...props}/>
+const wrap = (element, mode) => {
+  const scrollView = <div style={{height:"85vh", overflowY:"scroll"}}>{element}</div>;
+
+  return <div>
+    <Tabs mode={mode}/>
+      {scrollView}
+    <Footer isDoneMode={mode===AppModes.MODE_DONE}/>
   </div>
-  );
+}
+
+class Main extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidUpdate() {
+    const element = document.getElementById("id_today");
+    if(element)
+      element.scrollIntoView({behavior: 'smooth'});
+  }
+
+  render() {
+    return (
+    <div style={{
+      marginLeft:"auto",
+      marginRight:"auto",
+      width:"30em",
+      fontFamily:"sans serif"
+    }}>
+      <MainImpl {...this.props}/>
+    </div>
+    );
+  }
 }
 
 const mapStateToProps = state => state;
