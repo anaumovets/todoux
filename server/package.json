@@ -1,0 +1,18 @@
+{
+  "name": "todoux-server",
+  "version": "1.0.0",
+  "description": "server for the todoux app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dotenv": "^6.1.0",
+    "express": "*",
+    "http": "0.0.0",
+    "https": "^1.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
