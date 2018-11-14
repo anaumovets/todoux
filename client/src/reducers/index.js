@@ -2,24 +2,26 @@ import {combineReducers} from 'redux';
 import {AppModes} from '../actions';
 
 const daylength = 24*3600000;
+const nextId = (state) => ++state.lastid;
 
 const initial = {
-  list: [
-  {id:'1', text:'item 1 descr', date: Date.now()},
-  {id:'2', text:'item 2 descr doable', doable: true, date: Date.now()},
-  {id:'3', text:'item 3 descr', date: Date.now()+daylength},
-  {id:'4', text:'item 4 descr doable', doable:true, date: Date.now()+3*daylength},
-  {id:'5', text:'item2 descr doable!', doable: true, date: Date.now()+3*daylength, remindTerm: 5},
-  {id:'6', text:'item2 descr', date: Date.now()+8*daylength},
-  {id:'7', text:(new Array(50)).fill('long').join('\n'), date:Date.now()+5*daylength},
-  {id:'8', text:'item descr doable', doable:true, date: Date.now()-3*daylength},
-  {id:'9', text:'item descr doable', doable:true, date: Date.now()-4*daylength},
-  {id:'10', text:'item descr doable', doable:true, date: Date.now()-5*daylength},
-  ],
+  // list: [
+  // {id:'1', text:'item 1 descr', date: Date.now()},
+  // {id:'2', text:'item 2 descr doable', doable: true, date: Date.now()},
+  // {id:'3', text:'item 3 descr', date: Date.now()+daylength},
+  // {id:'4', text:'item 4 descr doable', doable:true, date: Date.now()+3*daylength},
+  // {id:'5', text:'item2 descr doable!', doable: true, date: Date.now()+3*daylength, remindTerm: 5},
+  // {id:'6', text:'item2 descr', date: Date.now()+8*daylength},
+  // {id:'7', text:(new Array(50)).fill('long').join('\n'), date:Date.now()+5*daylength},
+  // {id:'8', text:'item descr doable', doable:true, date: Date.now()-3*daylength},
+  // {id:'9', text:'item descr doable', doable:true, date: Date.now()-4*daylength},
+  // {id:'10', text:'item descr doable', doable:true, date: Date.now()-5*daylength},
+  // ],
 
-  lastid:7,
+  // lastid:7,
 
-  nextId: function() {return ++this.lastid}
+  invalid: true,
+  isFetching: false
 };
 
 const items = (state = initial, action) => {
@@ -80,6 +82,35 @@ const items = (state = initial, action) => {
       delete state.list[ind].done;
       delete state.list[ind].donedate;
       return {...state};
+    }
+
+    case 'FETCH_ITEMS':
+    {
+      if(action.error) {
+        return {
+          invalid: false,
+          isFetching: false,
+          error: action.error,
+        };
+      }
+
+      //receive items
+      if(action.data) {
+        return {
+          ...action.data, 
+          isFetching:false, 
+          invalid: false
+        };
+      }
+
+      //initiate fetch
+      if(!action.data) {
+        return {
+          invalid:true, 
+          isFetching:true
+        };
+      }
+
     }
 
     default:

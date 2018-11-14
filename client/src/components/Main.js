@@ -14,6 +14,14 @@ import {
 
 const daylength = 24*3600000;
 
+const renderError = (error) => {
+  return <div>{error}</div>
+}
+
+const renderLoading = () => {
+  return <div>Loading...</div>
+}
+
 const renderToday = (date, items) => {
   const date2day = date => Math.floor(date/daylength);
   const relevant = item => {
@@ -69,6 +77,12 @@ const renderCalendar = (mindate, maxdate, today, items) => {
 }
 
 const MainImpl = (props) => {
+  if(props.items.error)
+    return renderError(props.error);
+
+  if(!props.items.list)
+    return renderLoading();
+
   const {selected_id, mode, createItem, editItem} = props;
   const items = props.items.list;
 

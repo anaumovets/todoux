@@ -30,6 +30,30 @@ export const saveItem = (item) => ({
   item
 });
 
+export const fetchItemsImpl = (error, data) => ({
+  type: 'FETCH_ITEMS',
+  error,
+  data
+});
+
+export const fetchItems = () => {
+  return dispatch => {
+    dispatch(fetchItemsImpl());
+    return fetch(`http://0.0.0.0:4017/items`)
+      .then(
+
+        response => {
+          //console.log('response', response, 'json', response.json());
+          return response.json();
+        },
+        error => dispatch(fetchItemsImpl(error)))
+      .then(json => {
+        console.log('json ', json)
+        return dispatch(fetchItemsImpl(null, json))
+      });
+  }
+}
+
 export const changeSelect = (id) => ({
   type: 'CHANGE_SELECT',
   id
