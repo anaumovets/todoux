@@ -32,12 +32,32 @@ const Controller = function(dburl) {
 }
 
 Controller.prototype.getItems = function(req, res) {
+    const convert = item => {delete item._id; return item;};
+
     this.db.collection('items').find().toArray( 
         function(err, r) {
             assert.equal(err, null);
-            res.json(r);
+            res.json(r.map(convert));
         }
     );
+}
+
+Controller.prototype.postItems = function(req, res) {
+    const convert = item => {item._id = item.id; return item;};
+    console.log(req);
+    const items = req.body.items.map(convert);
+
+    this.db.collection('items').insert(items, 
+        function(err, r) {
+            if(err)
+            {
+                res.status(200).json({'error': err});
+                res.end();
+                return;
+            }
+            assert.equal(err, null);
+            res.json(r);
+    });
 }
 
 module.exports = function (dburl) {

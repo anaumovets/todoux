@@ -5,6 +5,9 @@ let fs = require('fs');
 let http = require('http');
 let https = require('https');
 let controller = require('./controller')('mongodb://localhost:27017/todoux');
+var request = require('request');
+var bodyParser = require('body-parser');
+var compression = require('compression');
 
 let app = express();
 
@@ -16,14 +19,30 @@ app.all('/*', function(req, res, next) {
   next();
 });
 
+app.use(compression());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+app.use(bodyParser.json()); // for parsing application/json
+
 let router = express.Router();
 router.route('/items')
-      .get((req, res)=>controller.getItems(req, res));
+      .get((req, res)=>controller.getItems(req, res))
+      .post((req, res)=>controller.postItems(req, res));
 app.use('/', router);
 
 //https.createServer(options, app).listen({port: 4017});
 http.createServer(app).listen({port: 4017});
 
 console.log('listening on port '+4017);
+
+// setTimeout(()=>{
+//     request['post']('http://localhost:4017/items', {
+//         form:{
+//             items:[{_id:"1", text:"abc posted from post", date:1233445}]
+//         }
+//     });
+// }, 1000);
 
 
