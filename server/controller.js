@@ -1,4 +1,6 @@
 'use strict';
+var assert = require('assert');
+var MongoClient = require('mongodb').MongoClient;
 
 const daylength = 24*3600000;
 const initial = {
@@ -18,6 +20,27 @@ const initial = {
   lastid:7
 };
 
-exports.getItems = function(req, res) {
-    res.json(initial);
+const Controller = function(dburl) {
+    MongoClient.connect(dburl, (err, client) => {
+        if(err) {
+            return;
+        }
+        this.db = client.db('items');
+    });
+
+    return this;
 }
+
+Controller.prototype.getItems = function(req, res) {
+    this.db.collection('items').find().toArray( 
+        function(err, r) {
+            assert.equal(err, null);
+            res.json(r);
+        }
+    );
+}
+
+module.exports = function (dburl) {
+    return new Controller(dburl);
+}
+
