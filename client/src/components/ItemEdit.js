@@ -6,7 +6,7 @@ import DatePicker from 'react-date-picker'
 
 const ItemEdit = ({item, onSave}) => {
     item = item || {};
-    item.date = item.date || new Date();
+    item.date = item.date || Date.now();
 
     let textinput, dateinput;
     let yearlyEl, monthlyEl, weeklyEl, daysOfWeekEl,
@@ -26,9 +26,9 @@ const ItemEdit = ({item, onSave}) => {
     }
 
     item.weekdays = item.weekdays || (new Array(7)).fill(false);
-    const day = item.date.getDate();
-    const month = item.date.getMonth()+1;
-    const dateFormatted = `${item.date.getFullYear()}-${month < 10 ? ('0'+month) : month}-${day < 10 ? ('0'+day) : day}`;
+    const day = (new Date(item.date)).getDate();
+    const month = (new Date(item.date)).getMonth()+1;
+    const dateFormatted = `${(new Date(item.date)).getFullYear()}-${month < 10 ? ('0'+month) : month}-${day < 10 ? ('0'+day) : day}`;
 
     return (
         <div>
@@ -47,7 +47,7 @@ const ItemEdit = ({item, onSave}) => {
                     id="date" 
                     type="date"
                     defaultValue={dateFormatted}
-                    onChange={()=>item.date=new Date(dateinput.value)}/>
+                    onChange={()=>item.date=(new Date(dateinput.value)).valueOf()}/>
             </div>
 
             <div>

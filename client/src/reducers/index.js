@@ -93,7 +93,8 @@ const items = (state = initial, action) => {
       //receive items
       if(action.data) {
         return {
-          list: action.data.items, 
+          list: action.data.items,
+          lastid: action.data.lastid || 0,
           isFetching: false, 
           invalid: false
         };

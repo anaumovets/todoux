@@ -6,8 +6,9 @@ export const updateItemClient = (item) => ({
 });
 
 export const createItem = (item) => (dispatch, getState) => {
-  dispatch(updateItemClient({id:nextId(getState()), ...item}));
-  dispatch(postItems([item]));
+  const newitem = {id:nextId(getState()), ...item};
+  dispatch(updateItemClient(newitem));
+  dispatch(postItems([newitem]));
 };
 
 export const editItem = (item) => (dispatch) => {
@@ -64,7 +65,7 @@ export const postItems = (items) => (dispatch) => {
         'Content-Type': 'application/json'
       },
       method: "POST",
-      body: JSON.stringify(items)
+      body: JSON.stringify({"items": items})
     })
     .then(
       response => {
