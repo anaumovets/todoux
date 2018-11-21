@@ -2,7 +2,7 @@ import {combineReducers} from 'redux';
 import {AppModes} from '../actions';
 
 const daylength = 24*3600000;
-const nextId = (state) => ++state.lastid;
+
 
 const initial = {
   // list: [
@@ -26,19 +26,15 @@ const initial = {
 
 const items = (state = initial, action) => {
   switch (action.type) {
-    case 'CREATE_ITEM':
-      if(!action.item)
-        return state;
-      let item = {id: ''+state.nextId(), ...action.item};
-      state.list.push(item);
-      return {...state};
-
-    case 'EDIT_ITEM':
+    case 'UPDATE_ITEM_CLIENT':
     {
       if(!action.item)
         return state;
       const ind = state.list.findIndex(x => x.id === action.item.id);
-      state.list[ind] = action.item;
+      if(ind === -1)
+        state.list.push(action.item);
+      else
+        state.list[ind] = action.item;
       return {...state};
     }
 
@@ -51,7 +47,7 @@ const items = (state = initial, action) => {
       if(ind === -1)
         return state;
 
-        console.log('removing ', ind)
+      console.log('removing ', ind)
       state.list.splice(ind, 1);
       return {...state};
     }
@@ -97,8 +93,8 @@ const items = (state = initial, action) => {
       //receive items
       if(action.data) {
         return {
-          ...action.data, 
-          isFetching:false, 
+          list: action.data.items, 
+          isFetching: false, 
           invalid: false
         };
       }
@@ -110,7 +106,30 @@ const items = (state = initial, action) => {
           isFetching:true
         };
       }
+    }
 
+    case 'POST_ITEMS':
+    {
+      //let's use fire and forget fetch
+      //handle the logic on client as well as on server and
+      //only inform the user if something went wrong with the request
+      if(action.error) {
+        console.error("error while posting items to server: ", action.error);
+        return state;
+      }
+
+      //post request succesful - do nothing
+      if(action.data) {
+        return state;
+      }
+
+      //initiate fetch
+      if(!action.data) {
+        return {
+          invalid:true, 
+          isFetching:true
+        };
+      }
     }
 
     default:

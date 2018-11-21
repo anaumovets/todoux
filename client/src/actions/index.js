@@ -1,14 +1,18 @@
-let nextTodoId = 0
+const nextId = (state) => ++state.items.lastid;
 
-export const createItem = (item) => ({
-  type: 'CREATE_ITEM',
+export const updateItemClient = (item) => ({
+  type: 'UPDATE_ITEM_CLIENT',
   item
 });
 
-export const editItem = (item) => ({
-  type: 'EDIT_ITEM',
-  item
-});
+export const createItem = (item) => (dispatch, getState) => {
+  dispatch(updateItemClient({id:nextId(getState()), ...item}));
+  dispatch(postItems([item]));
+};
+
+export const editItem = (item) => (dispatch) => {
+  dispatch(updateItemClient(item));
+};
 
 export const removeItem = (id) => ({
   type: 'REMOVE_ITEM',
@@ -25,10 +29,10 @@ export const undoItem = (id) => ({
   id
 });
 
-export const saveItem = (item) => ({
-  type: 'SAVE_ITEM',
-  item
-});
+// export const saveItem = (item) => ({
+//   type: 'SAVE_ITEM',
+//   item
+// });
 
 export const fetchItemsImpl = (error, data) => ({
   type: 'FETCH_ITEMS',
@@ -36,22 +40,38 @@ export const fetchItemsImpl = (error, data) => ({
   data
 });
 
-export const fetchItems = () => {
-  return dispatch => {
-    dispatch(fetchItemsImpl());
-    return fetch(`http://0.0.0.0:4017/items`)
-      .then(
+export const fetchItems = () => (dispatch) => {
+  dispatch(fetchItemsImpl());
+  return fetch(`http://0.0.0.0:4017/items`)
+    .then(
+      response => {
+        //console.log('response', response, 'json', response.json());
+        return response.json();
+      })
+    .then(json => {
+      console.log('json ', json)
+      return dispatch(fetchItemsImpl(null, json))
+    })
+    .catch(error => dispatch(fetchItemsImpl(error)));
+}
 
-        response => {
-          //console.log('response', response, 'json', response.json());
-          return response.json();
-        },
-        error => dispatch(fetchItemsImpl(error)))
-      .then(json => {
-        console.log('json ', json)
-        return dispatch(fetchItemsImpl(null, json))
-      });
-  }
+
+export const postItems = (items) => (dispatch) => {
+    return fetch(`http://0.0.0.0:4017/items`,
+    {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify(items)
+    })
+    .then(
+      response => {
+        console.log('response', response, 'json', response.json());
+      },
+      error => dispatch(fetchItemsImpl(error))
+    );
 }
 
 export const changeSelect = (id) => ({

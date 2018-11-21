@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import { connect } from 'react-redux'
 
@@ -15,7 +16,7 @@ import {
 const daylength = 24*3600000;
 
 const renderError = (error) => {
-  return <div>{error}</div>
+  return <div>{'ERROR LOADING ITEMS:' + JSON.stringify(error)}</div>
 }
 
 const renderLoading = () => {
@@ -23,6 +24,7 @@ const renderLoading = () => {
 }
 
 const renderToday = (date, items) => {
+  console.log('today items ', items);
   const date2day = date => Math.floor(date/daylength);
   const relevant = item => {
     if(!item.doable)
@@ -69,7 +71,7 @@ const renderCalendar = (mindate, maxdate, today, items) => {
   const calendar = (new Array(date2idx(maxdate)+1)).fill().map(x=>({items:[]}));
   const idx2date = idx => mindate + idx*daylength;
 
-  items.filter(item => !item.done).forEach(item => {
+  items.list.filter(item => !item.done).forEach(item => {
     calendar[date2idx(item.date)].items.push(item);
   });
 
@@ -77,17 +79,16 @@ const renderCalendar = (mindate, maxdate, today, items) => {
 }
 
 const MainImpl = (props) => {
-  if(props.items.error)
-    return renderError(props.error);
-
-  if(!props.items.list)
+  //console.log('pi:'+JSON.stringify(props.items));
+  if(!props.items || props.items.isFetching)
     return renderLoading();
-
-  const {selected_id, mode, createItem, editItem} = props;
-  const items = props.items.list;
+  if(props.items.error)
+    return renderError(props.items.error);
+  const {selected_id, mode, createItem, editItem, items} = props;
+  //const items = props.items.list;
 
   if(mode === AppModes.MODE_EDITING) {
-    let item = items.find(item => item.id === selected_id);
+    let item = items.list.find(item => item.id === selected_id);
     return <ItemEdit item = {{...item}} onSave={editItem}/>
   }
   
@@ -104,10 +105,10 @@ const MainImpl = (props) => {
   }
 
   if(mode === AppModes.MODE_DONE) {
-    return wrap(<ItemList items={items.filter(item => item.done)}/>, mode);
+    return wrap(<ItemList items={items.list.filter(item => item.done)}/>, mode);
   }
 
-  return wrap(renderToday(Date.now(), items), mode);
+  return wrap(renderToday(Date.now(), items.list), mode);
 }
 
 const wrap = (element, mode) => {

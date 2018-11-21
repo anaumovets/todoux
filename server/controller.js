@@ -37,14 +37,15 @@ Controller.prototype.getItems = function(req, res) {
     this.db.collection('items').find().toArray( 
         function(err, r) {
             assert.equal(err, null);
-            res.json(r.map(convert));
+            console.log(r);
+            res.json({"items":r.map(convert)});
         }
     );
 }
 
 Controller.prototype.postItems = function(req, res) {
     const convert = item => {item._id = item.id; return item;};
-    console.log(req);
+    console.log('posted items', req);
     const items = req.body.items.map(convert);
 
     this.db.collection('items').insert(items, 
