@@ -20,6 +20,31 @@ const initial = {
   lastid:7
 };
 
+const getLastId = (db) => {
+    const impl = function(resolve, reject) {
+        db.collection('lastid').find().toArray(
+            function(err, r) {
+                assert.equal(err, null);
+                assert.equal(r.length, 1);
+                resolve(r[0]);
+            });
+    }
+
+    return new Promise(impl);
+}
+
+const getAllItems = (db) => {
+    const impl = function(resolve, reject) {
+        db.collection('items').find().toArray(
+            function(err, r) {
+                assert.equal(err, null);
+                resolve(r);
+            });
+    }
+
+    return new Promise(impl);
+}
+
 const Controller = function(dburl) {
     MongoClient.connect(dburl, (err, client) => {
         if(err) {
