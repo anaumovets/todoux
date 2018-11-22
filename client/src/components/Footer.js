@@ -24,7 +24,7 @@ const Footer = ({
       {buttonHelper(modeCreate, 'New', false)}
       {buttonHelper(()=>modeEdit(selected_id), 'Edit', !selected_id)}
       {buttonHelper(()=>removeItem(selected_id), 'Remove', !selected_id)}
-      {!isDoneMode && buttonHelper(()=>finishItem(selected_id), 'Finish', 
+      {!isDoneMode && buttonHelper(()=>finishItem(selected_item), 'Finish', 
         !selected_id || !selected_item || !selected_item.doable)}
       {isDoneMode && buttonHelper(()=>undoItem(selected_id), 'Undo', !selected_id)}
     </div>
@@ -50,8 +50,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(actions.removeItem(id));
     dispatch(actions.changeSelect());
   },
-  finishItem: (id) => {
-    dispatch(actions.finishItem(id));
+  finishItem: (item) => {
+    dispatch(actions.finishItem(item));
     dispatch(actions.changeSelect());
   },
   undoItem: (id) => {

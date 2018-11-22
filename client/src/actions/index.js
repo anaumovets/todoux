@@ -5,25 +5,40 @@ export const updateItemClient = (item) => ({
   item
 });
 
+export const removeItemClient = (id) => ({
+  type: 'REMOVE_ITEM',
+  id
+});
+
+export const finishItemClient = (id) => ({
+  type: 'FINISH_ITEM',
+  id
+});
+
 export const createItem = (item) => (dispatch, getState) => {
   const newitem = {id:nextId(getState()), ...item};
   dispatch(updateItemClient(newitem));
   dispatch(postItems([newitem]));
 };
 
-export const editItem = (item) => (dispatch) => {
-  dispatch(updateItemClient(item));
+export const removeItem = (id) => (dispatch) => {
+  console.log('remove item ', id);
+  dispatch(removeItemClient(id));
+  dispatch(deleteItems([id]));
 };
 
-export const removeItem = (id) => ({
-  type: 'REMOVE_ITEM',
-  id
-});
+export const finishItem = (item) => (dispatch) => {
+  item.done = true;
+  item.donedate = Date.now();
+  dispatch(editItem(item));
+};
 
-export const finishItem = (id) => ({
-  type: 'FINISH_ITEM',
-  id
-});
+export const editItem = (item) => (dispatch) => {
+  dispatch(updateItemClient(item));
+  dispatch(postItems([item]));
+};
+
+
 
 export const undoItem = (id) => ({
   type: 'UNDO_ITEM',
@@ -70,9 +85,26 @@ export const postItems = (items) => (dispatch) => {
     .then(
       response => {
         console.log('response', response, 'json', response.json());
-      },
-      error => dispatch(fetchItemsImpl(error))
-    );
+      })
+    .catch(error => console.error('failed to post items: ', error));
+}
+
+export const deleteItems = (ids) => (dispatch) => {
+  console.log('delete items ', ids);
+  return fetch(`http://0.0.0.0:4017/items`,
+  {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    method: "DELETE",
+    body: JSON.stringify({"ids": ids})
+  })
+  .then(
+    response => {
+      console.log('response', response);
+    })
+  .catch(error => console.error('failed to delete items: ', error));
 }
 
 export const changeSelect = (id) => ({

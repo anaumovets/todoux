@@ -62,6 +62,27 @@ Controller.prototype.postItems = function(req, res) {
     });
 }
 
+Controller.prototype.deleteItems = function(req, res) {
+    if(!req.body.ids) {
+        console.error('bad request for deleting items');
+        return;
+    }
+
+    console.log('delete items', req.body.ids);
+
+    this.db.collection('items').remove({_id: {$in: req.body.ids}}, 
+        function(err, r) {
+            if(err)
+            {
+                res.status(200).json({'error': err});
+                res.end();
+                return;
+            }
+            assert.equal(err, null);
+            res.json(r);
+    });
+}
+
 module.exports = function (dburl) {
     return new Controller(dburl);
 }

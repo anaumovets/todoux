@@ -13,7 +13,7 @@ let app = express();
 
 app.all('/*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
   res.header("Access-Control-Allow-Headers", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   next();
@@ -29,7 +29,8 @@ app.use(bodyParser.json()); // for parsing application/json
 let router = express.Router();
 router.route('/items')
       .get((req, res)=>controller.getItems(req, res))
-      .post((req, res)=>controller.postItems(req, res));
+      .post((req, res)=>controller.postItems(req, res))
+      .delete((req, res)=>controller.deleteItems(req, res));
 app.use('/', router);
 
 //https.createServer(options, app).listen({port: 4017});

@@ -52,19 +52,19 @@ const items = (state = initial, action) => {
       return {...state};
     }
 
-    case 'FINISH_ITEM':
-    {
-      if(!action.id)
-        return state;
+    // case 'FINISH_ITEM':
+    // {
+    //   if(!action.id)
+    //     return state;
 
-      const ind = state.list.findIndex(x => x.id === action.id);
-      if(ind === -1 || !state.list[ind].doable)
-        return state;
+    //   const ind = state.list.findIndex(x => x.id === action.id);
+    //   if(ind === -1 || !state.list[ind].doable)
+    //     return state;
 
-      state.list[ind].done = true;
-      state.list[ind].donedate = Date.now();
-      return {...state};
-    }
+    //   state.list[ind].done = true;
+    //   state.list[ind].donedate = Date.now();
+    //   return {...state};
+    // }
 
     case 'UNDO_ITEM':
     {
