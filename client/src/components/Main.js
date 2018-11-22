@@ -45,13 +45,16 @@ const renderToday = (date, items) => {
 }
 
 const renderDay = (date, items, isToday) => {
-  if(!items || !items.length)
+  items = items || [];
+  if(!isToday && !items.length)
     return null;
 
   const headerStyle = {
     textAlign:"center",
     backgroundColor: isToday ? '#ffffaa' : '#ffffff'
   };
+
+  const empty = <center><br/>No items for today!<br/></center>;
 
   return <div
     key={'day'+Math.floor(date/daylength)}
@@ -61,7 +64,7 @@ const renderDay = (date, items, isToday) => {
         <div style={headerStyle} id={isToday ? 'id_today' : null}>
           <b>{(new Date(date)).toDateString()}</b>
         </div>
-        <ItemList items={items}/>
+        {items.length ? <ItemList items={items}/> : empty}
         <br/><br/><br/>
   </div>
 }

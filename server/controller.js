@@ -26,6 +26,7 @@ const Controller = function(dburl) {
             return;
         }
         this.db = client.db('items');
+        //this.db.collection('items').remove();
     });
 
     return this;
@@ -45,7 +46,7 @@ Controller.prototype.getItems = function(req, res) {
 
 Controller.prototype.postItems = function(req, res) {
     const convert = item => {item._id = item.id; return item;};
-    console.log('posted items', req);
+    console.log('posted items', req.body);
     const items = req.body.items.map(convert);
 
     this.db.collection('items').insert(items, 
