@@ -45,7 +45,6 @@ const mapDispatchToProps = dispatch => ({
   },
   modeEdit: (id) => {
     dispatch(actions.modeEdit(id));
-    dispatch(actions.changeSelect());
   },
   removeItem: (id) => {
     dispatch(actions.removeItem(id));

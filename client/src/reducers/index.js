@@ -152,12 +152,19 @@ const select = (state = {id: null}, action) => {
 }
 
 const mode = (state = AppModes.MODE_TODAY, action) => {
-  if(action.mode === state)
-    return state;
+  switch (action.type) {
+    case 'CHANGE_MODE': {
+      if(action.mode === state)
+        return state;
+  
+      if(action.mode !== undefined)
+        state = action.mode;
 
-  if(action.mode !== undefined)
-    state = action.mode;
-  return state;
+      return state;
+    }
+    default:
+      return state;
+  }
 }
 
 

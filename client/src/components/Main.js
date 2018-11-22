@@ -87,11 +87,11 @@ const MainImpl = (props) => {
     return renderLoading();
   if(props.items.error)
     return renderError(props.items.error);
-  const {selected_id, mode, createItem, editItem, items} = props;
+  const {select, mode, createItem, editItem, items} = props;
   //const items = props.items.list;
 
   if(mode === AppModes.MODE_EDITING) {
-    let item = items.list.find(item => item.id === selected_id);
+    let item = items.list.find(item => item.id === select.id);
     return <ItemEdit item = {{...item}} onSave={editItem}/>
   }
   
