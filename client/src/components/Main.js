@@ -70,9 +70,14 @@ const renderDay = (date, items, isToday) => {
 }
 
 const renderCalendar = (mindate, maxdate, today, items) => {
-  const date2idx = day => Math.floor((day - mindate)/daylength);
-  const calendar = (new Array(date2idx(maxdate)+1)).fill().map(x=>({items:[]}));
+  const date2day = date => Math.floor(date/daylength);
+  const date2idx = date => date2day(date) - date2day(mindate);
   const idx2date = idx => mindate + idx*daylength;
+
+  console.log('today '+ date2idx(Date.now()));
+  const calendar = (new Array(date2idx(maxdate)+1)).fill().map(x=>({items:[]}));
+
+  console.log('today back'+ (new Date(idx2date(date2idx(today)))).toDateString());
 
   items.list.filter(item => !item.done).forEach(item => {
     calendar[date2idx(item.date)].items.push(item);
