@@ -26,6 +26,11 @@ const Item = ({item, selected_id, changeSelect}) => {
             <div style={{float:"right", color: '#666666'}}>
                 <i>{`Done ${(new Date(item.donedate)).toDateString()}`}</i>
             </div> }
+            {item.doable && !item.done && 
+            <div style={{float:"right", color: '#666666'}}>
+                <i>{`Due ${(new Date(item.date)).toDateString()}`}</i>
+            </div> }
+
         </div>
     )
     
