@@ -76,11 +76,16 @@ const renderCalendar = (mindate, maxdate, today, items) => {
 
   const calendar = (new Array(date2idx(maxdate)+1)).fill().map(x=>({items:[]}));
 
+  console.log('cl: '+calendar.length);
   items.list.filter(item => !item.done).forEach(item => {
     const i = date2idx(item.date);
-    if(i < 0 || i >= items.list.length) return;
+    console.log('item date '+i);
+    console.log((new Date(item.date)).toDateString());
+    if(i < 0 || i >= calendar.length) return;
     calendar[i].items.push(item);
   });
+
+  console.log('calendar: ', calendar);
 
   return calendar.map((day, i) => renderDay(idx2date(i), day.items, i === date2idx(today)));
 }
@@ -104,8 +109,8 @@ const MainImpl = (props) => {
 
   if(mode === AppModes.MODE_CALENDAR) {
     return wrap(
-      renderCalendar(Date.now() - 30*daylength, 
-                     Date.now() + 30*daylength,
+      renderCalendar(Date.now() - 90*daylength, 
+                     Date.now() + 90*daylength,
                      Date.now(), items),
       mode
     );

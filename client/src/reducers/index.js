@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
 import {AppModes} from '../actions';
+import * as logic from '../logic/logic.js';
 
 const daylength = 24*3600000;
 
@@ -31,10 +32,16 @@ const items = (state = initial, action) => {
       if(!action.item)
         return state;
       const ind = state.list.findIndex(x => x.id === action.item.id);
-      if(ind === -1)
-        state.list.push(action.item);
-      else
+      console.log('ind'+ind);
+      if(ind === -1) {
+        state.list = state.list.concat(logic.getInstances(action.item, Date.now() - 90*daylength, 
+        Date.now() + 90*daylength));
+        
+        //console.log('**'+logic.getInstances(action.item, Date.now() - 90*daylength, 
+        //Date.now() + 90*daylength));
+      } else {
         state.list[ind] = action.item;
+      }
       return {...state};
     }
 

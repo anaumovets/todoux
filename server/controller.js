@@ -20,24 +20,29 @@ const initial = {
   lastid:7
 };
 
-const getLastId = (db) => {
-    const impl = function(resolve, reject) {
-        db.collection('lastid').find().toArray(
-            function(err, r) {
-                assert.equal(err, null);
-                assert.equal(r.length, 1);
-                resolve(r[0]);
-            });
-    }
+// const getLastId = (db) => {
+//     const impl = function(resolve, reject) {
+//         db.collection('lastid').find().toArray(
+//             function(err, r) {
+//                 assert.equal(err, null);
+//                 console.log()
+//                 assert.equal(r.length, 1);
+//                 resolve(r[0]);
+//             });
+//     }
 
-    return new Promise(impl);
-}
+//     return new Promise(impl);
+// }
 
 const getAllItems = (db) => {
     const impl = function(resolve, reject) {
         db.collection('items').find().toArray(
             function(err, r) {
-                assert.equal(err, null);
+                if(err) {
+                    console.log(err);
+                    resolve({"error": err});
+                    return;
+                }
                 resolve(r);
             });
     }
@@ -60,13 +65,19 @@ const Controller = function(dburl) {
 Controller.prototype.getItems = function(req, res) {
     const convert = item => {delete item._id; return item;};
 
-    this.db.collection('items').find().toArray( 
-        function(err, r) {
-            assert.equal(err, null);
-            console.log(r);
-            res.json({"items":r.map(convert)});
-        }
-    );
+    let lastid;
+    getAllItems(this.db)
+    .then(items => res.json({"items":items.map(convert), 
+                lastid: Math.max(...(items.map(it=>parseInt(it.id))))}))
+    .catch(err=>console.log(err));
+
+    // this.db.collection('items').find().toArray( 
+    //     function(err, r) {
+    //         assert.equal(err, null);
+    //         console.log(r);
+    //         res.json({"items":r.map(convert)});
+    //     }
+    // );
 }
 
 Controller.prototype.postItems = function(req, res) {

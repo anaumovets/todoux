@@ -17,6 +17,8 @@ export const finishItemClient = (id) => ({
 
 export const createItem = (item) => (dispatch, getState) => {
   const newitem = {id:nextId(getState()), ...item};
+  if(newitem.doable)
+    newitem.id += '.0';
   dispatch(updateItemClient(newitem));
   dispatch(postItems([newitem]));
 };
