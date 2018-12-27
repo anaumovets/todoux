@@ -64,11 +64,18 @@ const Controller = function(dburl) {
 
 Controller.prototype.getItems = function(req, res) {
     const convert = item => {delete item._id; return item;};
+    const getIntId = item => {
+        if(typeof item.id === 'string' || item.id instanceof String) {
+            let ind = item.id.indexOf('.');
+            return (ind === -1) ? parseInt(item.id) : parseInt(item.id.substr(0, ind+1));
+        }
 
-    let lastid;
+        return item.id;
+    }
+
     getAllItems(this.db)
     .then(items => res.json({"items":items.map(convert), 
-                lastid: Math.max(...(items.map(it=>parseInt(it.id))))}))
+                lastid: Math.max(...(items.map(getIntId)))}))
     .catch(err=>console.log(err));
 
     // this.db.collection('items').find().toArray( 
