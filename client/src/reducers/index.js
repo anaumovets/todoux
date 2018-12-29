@@ -100,7 +100,7 @@ const items = (state = initial, action) => {
       //receive items
       if(action.data) {
         return {
-          list: action.data.items,
+          list: logic.populate(action.data.items),
           lastid: action.data.lastid || 0,
           isFetching: false, 
           invalid: false

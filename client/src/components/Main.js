@@ -1,17 +1,18 @@
 // @flow
-import React from 'react'
-import { connect } from 'react-redux'
+import React from 'react';
+import { connect } from 'react-redux';
 
-import Footer from './Footer'
-import Tabs from './Tabs'
-import ItemList from './ItemList'
-import ItemEdit from './ItemEdit'
+import Footer from './Footer';
+import Tabs from './Tabs';
+import ItemList from './ItemList';
+import ItemEdit from './ItemEdit';
 import {
   AppModes,
   modeToday,
   createItem,
   editItem
-} from '../actions'
+} from '../actions';
+import * as logic from '../logic/logic.js';
 
 const daylength = 24*3600000;
 
@@ -24,9 +25,11 @@ const renderLoading = () => {
 }
 
 const renderToday = (date, items) => {
-  console.log('today items ', items);
   const date2day = date => Math.floor(date/daylength);
   const relevant = item => {
+    if(!logic.isVisible(item))
+      return false;
+
     if(!item.doable)
       return date2day(date) === date2day(item.date);
 
@@ -76,16 +79,11 @@ const renderCalendar = (mindate, maxdate, today, items) => {
 
   const calendar = (new Array(date2idx(maxdate)+1)).fill().map(x=>({items:[]}));
 
-  console.log('cl: '+calendar.length);
-  items.list.filter(item => !item.done).forEach(item => {
+  items.list.filter(item => !item.done && logic.isVisible(item)).forEach(item => {
     const i = date2idx(item.date);
-    console.log('item date '+i);
-    console.log((new Date(item.date)).toDateString());
     if(i < 0 || i >= calendar.length) return;
     calendar[i].items.push(item);
   });
-
-  console.log('calendar: ', calendar);
 
   return calendar.map((day, i) => renderDay(idx2date(i), day.items, i === date2idx(today)));
 }

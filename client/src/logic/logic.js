@@ -5,11 +5,34 @@ export function isSingle(item) {
     return (item.doable || (!item.yearly && !item.monthly && !item.weekly));
 }
 
-export function getInstances(item, mindate, maxdate) {
-    if(isSingle(item))
-        return [item];
+export function isVisible(item) {
+    return isSingle(item) || ((item.id + '').indexOf('.') !== -1);
+}
 
-    let instances = [];
+export function getSourceItem(item, items) {
+    const instanceidx = (item.id + '').indexOf('.');
+    if(instanceidx === -1)
+        return item;
+    const idx = parseInt(item.id.substring(instanceidx)) + 1;
+    const source = items.find(x => x.id == idx);
+    return source || item;
+}
+
+export function populate(items) {
+    let resitems = [];
+
+    items.forEach(item => {
+        resitems = resitems.concat(getInstances(item));
+    });
+
+    return resitems;
+}
+
+export function getInstances(item, mindate, maxdate) {
+    let instances = [item];
+    if(isSingle(item))
+        return instances;
+
     let inst = 0;
     for(let date = item.date; date2day(date) <= date2day(maxdate); 
         date = nextDate(item, date), ++inst)
