@@ -50,12 +50,16 @@ const items = (state = initial, action) => {
       if(!action.id)
         return state;
 
-      const ind = state.list.findIndex(x => x.id === action.id);
-      if(ind === -1)
-        return state;
+      const sourceid = logic.getSourceId(action.id);
+      console.log('source '+sourceid);
+      const isChild = x => {
+        const dotind = (''+x.id).indexOf('.');
+        if(dotind === -1)
+          return x.id === sourceid;
+        return (x.id.substring(0, dotind) == '' + sourceid);
+      };
 
-      console.log('removing ', ind)
-      state.list.splice(ind, 1);
+      state.list = state.list.filter(x => !isChild(x));
       return {...state};
     }
 

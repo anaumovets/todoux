@@ -24,7 +24,6 @@ export const createItem = (item) => (dispatch, getState) => {
 };
 
 export const removeItem = (id) => (dispatch) => {
-  console.log('remove item ', id);
   dispatch(removeItemClient(id));
   dispatch(deleteItems([id]));
 };
@@ -39,8 +38,6 @@ export const editItem = (item) => (dispatch) => {
   dispatch(updateItemClient(item));
   dispatch(postItems([item]));
 };
-
-
 
 export const undoItem = (id) => ({
   type: 'UNDO_ITEM',

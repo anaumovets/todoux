@@ -9,13 +9,12 @@ export function isVisible(item) {
     return isSingle(item) || ((item.id + '').indexOf('.') !== -1);
 }
 
-export function getSourceItem(item, items) {
-    const instanceidx = (item.id + '').indexOf('.');
+export function getSourceId(id) {
+    const instanceidx = (id + '').indexOf('.');
     if(instanceidx === -1)
-        return item;
-    const idx = parseInt(item.id.substring(instanceidx)) + 1;
-    const source = items.find(x => x.id == idx);
-    return source || item;
+        return id;
+    const idx = parseInt(id.substring(0, instanceidx));
+    return idx;
 }
 
 export function populate(items) {
