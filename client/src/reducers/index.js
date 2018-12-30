@@ -4,6 +4,12 @@ import * as logic from '../logic/logic.js';
 
 const daylength = 24*3600000;
 
+const isChild = (item, sourceid) => {
+  const dotind = (''+item.id).indexOf('.');
+  if(dotind === -1)
+    return item.id === sourceid;
+  return (item.id.substring(0, dotind) == '' + sourceid);
+};
 
 const initial = {
   // list: [
@@ -31,17 +37,15 @@ const items = (state = initial, action) => {
     {
       if(!action.item)
         return state;
-      const ind = state.list.findIndex(x => x.id === action.item.id);
-      console.log('ind'+ind);
-      if(ind === -1) {
-        state.list = state.list.concat(logic.getInstances(action.item, Date.now() - 90*daylength, 
-        Date.now() + 90*daylength));
-        
-        //console.log('**'+logic.getInstances(action.item, Date.now() - 90*daylength, 
-        //Date.now() + 90*daylength));
-      } else {
-        state.list[ind] = action.item;
-      }
+
+      const sourceid = logic.getSourceId(action.item.id);
+      const ind = state.list.findIndex(x => x.id === sourceid);
+      let item = action.item;
+
+      state.list = state.list.filter(x => !isChild(x, sourceid));
+      state.list = state.list.concat(logic.getInstances(item, Date.now() - 90*daylength, 
+                        Date.now() + 90*daylength));
+
       return {...state};
     }
 
@@ -51,15 +55,8 @@ const items = (state = initial, action) => {
         return state;
 
       const sourceid = logic.getSourceId(action.id);
-      console.log('source '+sourceid);
-      const isChild = x => {
-        const dotind = (''+x.id).indexOf('.');
-        if(dotind === -1)
-          return x.id === sourceid;
-        return (x.id.substring(0, dotind) == '' + sourceid);
-      };
 
-      state.list = state.list.filter(x => !isChild(x));
+      state.list = state.list.filter(x => !isChild(x, sourceid));
       return {...state};
     }
 

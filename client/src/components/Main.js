@@ -98,7 +98,7 @@ const MainImpl = (props) => {
   //const items = props.items.list;
 
   if(mode === AppModes.MODE_EDITING) {
-    let item = items.list.find(item => item.id === select.id);
+    let item = items.list.find(item => item.id === logic.getSourceId(select.id));
     return <ItemEdit item = {{...item}} onSave={editItem}/>
   }
   
