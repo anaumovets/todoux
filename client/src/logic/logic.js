@@ -1,33 +1,48 @@
+// @flow
 const daylength = 24*3600000;
 const date2day = date => Math.floor(date/daylength);
 
-export function isSingle(item) {
+export type ItemType = {
+    id: number | string,
+    date: number,
+    donedate? : number,
+    daysPeriod? : number,
+    doable: boolean,
+    done?: boolean,
+    yearly: boolean,
+    monthly: boolean,
+    weekly: boolean,
+    text: string,
+    weekdays: Array<boolean>
+};
+
+export function isSingle(item: ItemType) {
     return (item.doable || (!item.yearly && !item.monthly && !item.weekly));
 }
 
-export function isVisible(item) {
+export function isVisible(item: ItemType) {
     return isSingle(item) || ((item.id + '').indexOf('.') !== -1);
 }
 
-export function getSourceId(id) {
+export function getSourceId(id: number | string) {
     const instanceidx = (id + '').indexOf('.');
     if(instanceidx === -1)
         return id;
-    const idx = parseInt(id.substring(0, instanceidx));
+    const idx = parseInt((''+id).substring(0, instanceidx));
     return idx;
 }
 
-export function populate(items) {
+export function populate(items: Array<ItemType>, mindate: number, maxdate: number ) {
     let resitems = [];
 
     items.forEach(item => {
-        resitems = resitems.concat(getInstances(item));
+        resitems = resitems.concat(getInstances(item, mindate, maxdate));
     });
 
     return resitems;
 }
 
-export function getInstances(item, mindate, maxdate) {
+export function getInstances(item: ItemType, mindate: number, maxdate: number) {
     let instances = [item];
     if(isSingle(item))
         return instances;
@@ -48,23 +63,26 @@ export function getInstances(item, mindate, maxdate) {
     return instances;
 }
 
-export function createNextInstance(item)
+export function createNextInstance(item: ItemType)
 {
     let newitem = {...item};
     newitem.done = false;
     delete newitem.donedate;
     newitem.date = nextDate(item, item.date);
 
-    const instanceidx = newitem.id.indexOf('.');
-    const idx = parseInt(newitem.id.substring(instanceidx)) + 1;
-    newitem.id = newitem._id.substring(0, instanceidx) + '.' + idx;
+    if(!newitem.date)
+        return null;
+
+    const instanceidx = ('' + newitem.id).indexOf('.');
+    const idx = parseInt(('' + newitem.id).substring(instanceidx)) + 1;
+    newitem.id = ('' + newitem.id).substring(0, instanceidx) + '.' + idx;
     return newitem; 
 }
 
-function nextDate(item, date)
+function nextDate(item: ItemType, date: number)
 {
-    if(item.interval)
-        return date + item.interval;
+    if(item.daysPeriod)
+        return date + item.daysPeriod*daylength;
 
     if(item.yearly) {
         date = new Date(date);
@@ -87,7 +105,7 @@ function nextDate(item, date)
     }
 
     if(item.weekly) {
-        let next;// = new Date(date + daylength);
+        let next = new Date(date + daylength);
         for(let daycount  = 1; daycount <= 7; ++daycount) {
             next =  new Date(date + daycount*daylength);
             if(item.weekdays && item.weekdays[next.getDay()])

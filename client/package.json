@@ -15,6 +15,7 @@
     "flow": "flow",
     "start": "react-scripts start",
     "build": "babel src/ -d publish/",
+    "prepublish": "npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -30,6 +31,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-flow": "^6.23.0",
-    "flow-bin": "^0.86.0"
+    "flow-bin": "^0.86.0",
+    "flow-remove-types": "^1.2.3"
   }
 }

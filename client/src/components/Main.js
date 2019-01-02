@@ -24,7 +24,8 @@ const renderLoading = () => {
   return <div>Loading...</div>
 }
 
-const renderToday = (date, items) => {
+
+const renderToday = (date: number, items: Array<Object>) => {
   const date2day = date => Math.floor(date/daylength);
   const relevant = item => {
     if(!logic.isVisible(item))
@@ -47,7 +48,7 @@ const renderToday = (date, items) => {
   );
 }
 
-const renderDay = (date, items, isToday) => {
+const renderDay = (date: number, items: Array<Object>, isToday: boolean) => {
   items = items || [];
   if(!isToday && !items.length)
     return null;
@@ -72,7 +73,8 @@ const renderDay = (date, items, isToday) => {
   </div>
 }
 
-const renderCalendar = (mindate, maxdate, today, items) => {
+const renderCalendar = (mindate: number, maxdate: number, today: number, 
+  items: {list: Array<Object>}) => {
   const date2day = date => Math.floor(date/daylength);
   const date2idx = date => date2day(date) - date2day(mindate);
   const idx2date = idx => mindate + idx*daylength;
@@ -88,8 +90,21 @@ const renderCalendar = (mindate, maxdate, today, items) => {
   return calendar.map((day, i) => renderDay(idx2date(i), day.items, i === date2idx(today)));
 }
 
-const MainImpl = (props) => {
-  //console.log('pi:'+JSON.stringify(props.items));
+type MainImplProps = {
+  items: {
+    error? : string,
+    isFetching: boolean,
+    list: Array<Object>,
+  },
+
+  mode: string,
+  createItem: ()=>void,
+  editItem: ()=>void,
+  select: ()=>void,
+
+};
+
+const MainImpl = (props: MainImplProps)=> {
   if(!props.items || props.items.isFetching)
     return renderLoading();
   if(props.items.error)
@@ -131,19 +146,29 @@ const wrap = (element, mode) => {
   </div>
 }
 
-class Main extends React.Component {
+
+
+type MainState = {
+  scrolled: boolean
+}
+
+class Main extends React.Component<MainImplProps, MainState> {
+  state = {
+    scrolled: false
+  };
+
   constructor(props) {
     super(props);
   }
 
   componentDidUpdate() {
-    if(this.scrolled)
+    if(this.state.scrolled)
       return;
 
     const element = document.getElementById("id_today");
     if(element) {
       element.scrollIntoView({behavior: 'smooth'});
-      this.scrolled = true;
+      this.state.scrolled = true;
     }
   }
 

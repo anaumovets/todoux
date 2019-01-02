@@ -1,3 +1,5 @@
+// @flow
+
 import {combineReducers} from 'redux';
 import {AppModes} from '../actions';
 import * as logic from '../logic/logic.js';
@@ -8,30 +10,16 @@ const isChild = (item, sourceid) => {
   const dotind = (''+item.id).indexOf('.');
   if(dotind === -1)
     return item.id === sourceid;
-  return (item.id.substring(0, dotind) == '' + sourceid);
+  return ((''+item.id).substring(0, dotind) == '' + sourceid);
 };
 
 const initial = {
-  // list: [
-  // {id:'1', text:'item 1 descr', date: Date.now()},
-  // {id:'2', text:'item 2 descr doable', doable: true, date: Date.now()},
-  // {id:'3', text:'item 3 descr', date: Date.now()+daylength},
-  // {id:'4', text:'item 4 descr doable', doable:true, date: Date.now()+3*daylength},
-  // {id:'5', text:'item2 descr doable!', doable: true, date: Date.now()+3*daylength, remindTerm: 5},
-  // {id:'6', text:'item2 descr', date: Date.now()+8*daylength},
-  // {id:'7', text:(new Array(50)).fill('long').join('\n'), date:Date.now()+5*daylength},
-  // {id:'8', text:'item descr doable', doable:true, date: Date.now()-3*daylength},
-  // {id:'9', text:'item descr doable', doable:true, date: Date.now()-4*daylength},
-  // {id:'10', text:'item descr doable', doable:true, date: Date.now()-5*daylength},
-  // ],
-
-  // lastid:7,
-
   invalid: true,
-  isFetching: false
+  isFetching: false,
+  list: []
 };
 
-const items = (state = initial, action) => {
+const items = (state = initial, action: Object) => {
   switch (action.type) {
     case 'UPDATE_ITEM_CLIENT':
     {
@@ -39,7 +27,6 @@ const items = (state = initial, action) => {
         return state;
 
       const sourceid = logic.getSourceId(action.item.id);
-      const ind = state.list.findIndex(x => x.id === sourceid);
       let item = action.item;
 
       state.list = state.list.filter(x => !isChild(x, sourceid));
@@ -59,20 +46,6 @@ const items = (state = initial, action) => {
       state.list = state.list.filter(x => !isChild(x, sourceid));
       return {...state};
     }
-
-    // case 'FINISH_ITEM':
-    // {
-    //   if(!action.id)
-    //     return state;
-
-    //   const ind = state.list.findIndex(x => x.id === action.id);
-    //   if(ind === -1 || !state.list[ind].doable)
-    //     return state;
-
-    //   state.list[ind].done = true;
-    //   state.list[ind].donedate = Date.now();
-    //   return {...state};
-    // }
 
     case 'UNDO_ITEM':
     {
@@ -101,7 +74,8 @@ const items = (state = initial, action) => {
       //receive items
       if(action.data) {
         return {
-          list: logic.populate(action.data.items),
+          list: logic.populate(action.data.items, Date.now() - 90*daylength, 
+          Date.now() + 90*daylength),
           lastid: action.data.lastid || 0,
           isFetching: false, 
           invalid: false

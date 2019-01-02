@@ -1,7 +1,10 @@
+// @flow
+
 import React from 'react'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import {changeSelect} from '../actions'
+
 
 const Item = ({item, selected_id, changeSelect}) => {
     const selected = item.id === selected_id;
@@ -30,7 +33,6 @@ const Item = ({item, selected_id, changeSelect}) => {
             <div style={{float:"right", color: '#666666'}}>
                 <i>{`Due ${(new Date(item.date)).toDateString()}`}</i>
             </div> }
-
         </div>
     )
     

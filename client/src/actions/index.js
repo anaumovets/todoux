@@ -1,3 +1,5 @@
+import * as logic from '../logic/logic.js';
+
 const nextId = (state) => ++state.items.lastid;
 
 export const updateItemClient = (item) => ({
@@ -29,9 +31,18 @@ export const removeItem = (id) => (dispatch) => {
 };
 
 export const finishItem = (item) => (dispatch) => {
+  console.log('fnsh');
   item.done = true;
   item.donedate = Date.now();
-  dispatch(editItem(item));
+  dispatch(updateItemClient(item));
+  let items = [item];
+  let nextitem = logic.createNextInstance(item);
+  console.log('next inst: ' + nextitem);
+  if(nextitem) {
+    dispatch(updateItemClient(nextitem));
+    items.push(nextitem);
+  }
+  dispatch(postItems(items));
 };
 
 export const editItem = (item) => (dispatch) => {
